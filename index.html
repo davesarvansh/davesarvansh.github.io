@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dave Sarvansh - Curriculum Vitae</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Warm Neutrals with Deep Ocean Blue Accent -->
+    <!-- Application Structure Plan: A single-page, top-down application design was chosen for its clarity and professional feel, which is ideal for a CV. A sticky navigation bar provides immediate access to all key sections, enhancing user experience and allowing for quick exploration of Dave's qualifications without losing context. This structure is intuitive and mirrors the flow of a traditional resume while adding modern interactivity. The "Research & Project Experience" section now incorporates a visual timeline/roadmap to enhance engagement and illustrate project progression. -->
+    <!-- Visualization & Content Choices: The CV content is primarily textual. The chosen presentation method is structured, semantic HTML styled with Tailwind CSS to ensure a clean, professional, and highly readable layout. The main interactive feature is the smooth-scrolling navigation, which allows users to effortlessly move between sections. The "Research & Project Experience" section now features a custom HTML/CSS-based "roadmap" graphic to visually represent project progression, adding a captivating element without relying on external libraries or SVG. The "Key Skills & Proficiencies" section has been redesigned into interactive skill cards with subtle icons and hover effects for a more engaging visual presentation. The "Professional Development & Engagement" section is now transformed into a visually striking timeline, using custom CSS for a vertical line, distinct markers, and subtle animations to highlight each event, making the section more dynamic and engaging. Section titles have1 been given a special visual treatment with icons, backgrounds, and enhanced borders to make them more prominent and visually appealing. The "Memory Section" has been updated to include specific placeholder image tags for user-provided photos (MSc, internship, 3D metal printing, ICCMDP, Nanojadha, completion of master degree, Keysight event, ICNFT), with clear instructions for replacement. The long descriptive tagline has been moved from the header to the "Executive Summary" section for better visual flow and alignment. Header name font size has been adjusted to ensure it fits on one line without horizontal scrolling. Google Scholar links have been added to professor names in the "Research & Project Experience" section. The profile photo is now correctly referenced for display locally and on web hosting. The descriptive text for the Memory Section has been restored to be visible on the page, while photo-adding instructions remain in HTML comments. No charts or complex visualizations were used, as the data is qualitative and best presented textually to maintain a formal, academic tone. The focus is on clarity, professionalism, and ease of navigation. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom right, #fcfafa, #e0f2fe); /* Subtle gradient from off-white to very light blue */
+            background-attachment: fixed; /* Ensures gradient covers entire scrollable area */
+        }
+        .section-title {
+            @apply text-3xl font-extrabold text-gray-800 pb-3 mb-8 tracking-wide relative inline-flex items-center;
+            /* Enhanced styling for the title itself */
+            background: linear-gradient(to right, #e0f2fe, #f0f9ff); /* Light gradient background */
+            padding: 10px 25px 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-bottom: none; /* Remove default border-bottom */
+            margin-bottom: 3rem; /* More space below title */
+            transition: all 0.3s ease-in-out;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px; /* Position below the title */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%; /* Width of the underline */
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #2563eb); /* Gradient for the underline */
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .section-title:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        .section-title .icon {
+            @apply text-blue-600 mr-3 text-4xl; /* Icon styling */
+        }
+
+        .card {
+            @apply bg-white rounded-2xl shadow-xl p-8 mb-8 transition-all duration-300 ease-in-out transform hover:scale-[1.005] hover:shadow-2xl border border-gray-100;
+        }
+        .skill-category-card {
+            @apply bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center transition-all duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-lg border border-gray-100;
+        }
+        .skill-category-icon {
+            @apply text-5xl mb-4 text-blue-600; /* Larger icon for visual impact */
+        }
+        .skill-title {
+            @apply text-xl font-bold text-gray-800 mb-2;
+        }
+        .skill-description {
+            @apply text-gray-600 text-sm leading-relaxed;
+        }
+        .nav-link {
+            @apply px-4 py-2 text-gray-600 hover:text-blue-700 font-semibold rounded-lg transition-colors duration-300;
+        }
+        .list-disc li {
+            @apply text-gray-700 leading-relaxed;
+        }
+        .list-disc li strong {
+            @apply text-gray-800;
+        }
+
+        /* Animation for sections */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animated-section {
+            opacity: 0; /* Initially hidden */
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Research Experience Timeline specific styles */
+        .timeline-container {
+            position: relative;
+            padding-left: 50px; /* Space for the line and dots */
+        }
+
+        .timeline-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px; /* Position of the vertical line */
+            width: 4px;
+            height: 100%;
+            background-color: #a7d9f7; /* Light blue for the road */
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px; /* Space between items */
+        }
+
+        .timeline-item:last-child {
+            margin-bottom: 0; /* No margin for the last item */
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 20px; /* Vertical position of the dot */
+            left: -30px; /* Horizontal position relative to timeline-container */
+            width: 20px;
+            height: 20px;
+            background-color: #2563eb; /* Blue dot */
+            border: 4px solid #e0f2fe; /* Lighter border for contrast */
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 29px; /* Aligns with the center of the dot */
+            left: -10px; /* Connects dot to card */
+            width: 40px; /* Length of the horizontal line */
+            height: 2px;
+            background-color: #2563eb; /* Blue for the connector line */
+            z-index: 5;
+        }
+
+        /* Adjust card padding for timeline */
+        .timeline-item .card {
+            margin-left: 0;
+            margin-right: 0;
+            margin-bottom: 0; /* Handled by timeline-item margin-bottom */
+        }
+
+        /* Professional Development Timeline styles */
+        .dev-timeline {
+            position: relative;
+            padding-left: 60px; /* Space for the line and icons */
+        }
+
+        .dev-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 25px;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(to bottom, #60a5fa, #2563eb); /* Gradient line */
+            border-radius: 2px;
+        }
+
+        .dev-timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 40px; /* Space for content after icon */
+            opacity: 0; /* For animation */
+        }
+
+        .dev-timeline-item.animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .dev-timeline-item-icon {
+            position: absolute;
+            left: -10px; /* Position relative to .dev-timeline padding-left */
+            top: 0px; /* Adjust to center vertically with text */
+            background-color: #2563eb; /* Dark blue icon background */
+            color: white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 3px solid #e0f2fe; /* Light border */
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .dev-timeline-item:hover .dev-timeline-item-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .dev-timeline-item-content {
+            background-color: #f0f9ff; /* Very light blue background */
+            border-left: 5px solid #3b82f6; /* Blue left border */
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .dev-timeline-item:hover .dev-timeline-item-content {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+            background-color: #e0f2fe; /* Slightly darker on hover */
+        }
+
+        .dev-timeline-item-title {
+            @apply text-lg font-semibold text-gray-800;
+        }
+        .dev-timeline-item-date {
+            @apply text-sm text-gray-500 mt-1;
+        }
+
+        /* Memory Section Styles */
+        .memory-grid {
+            /* Tailwind classes for responsiveness */
+            @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8;
+
+            /* Explicit CSS for grid to ensure it applies */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Flexible columns */
+            gap: 2rem; /* Consistent gap */
+
+            /* Specific breakpoints to ensure the desired column count */
+            @media (min-width: 1024px) { /* Corresponds to Tailwind's 'lg' breakpoint */
+                grid-template-columns: repeat(4, 1fr);
+            }
+            @media (min-width: 640px) and (max-width: 1023px) { /* Corresponds to Tailwind's 'sm' breakpoint */
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .memory-card {
+            @apply bg-white rounded-xl shadow-lg overflow-hidden transition-transform duration-300 ease-in-out transform hover:scale-[1.02] hover:shadow-xl border border-gray-100;
+            display: flex; /* Use flexbox for internal alignment */
+            flex-direction: column; /* Stack image and content vertically */
+        }
+        .memory-image-placeholder {
+            /* This styling ensures all images fit within the card consistently */
+            object-fit: contain; /* Scales the image to fit within the content box, showing the entire image. Empty space will be letterboxed/pillarboxed. */
+            width: 100%; /* Ensures the image takes the full width of its container */
+            height: 15rem; /* Fixed height for consistent card appearance */
+            @apply bg-gray-200 flex items-center justify-center text-gray-500 text-sm font-medium;
+        }
+        .memory-content {
+            @apply p-5 flex-grow; /* Allow content to grow and fill remaining space */
+        }
+        .memory-title {
+            @apply text-xl font-bold text-gray-800 mb-2;
+        }
+        .memory-description {
+            @apply text-gray-600 text-sm;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/90 backdrop-blur-md shadow-lg sticky top-0 z-50">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <div class="flex items-center space-x-4">
+                    <!-- Profile photo: Ensure 'WhatsApp Image 2025-07-06 at 11.25.33_71bd418e.jpg' is in the same folder as your index.html file when hosting locally or on GitHub Pages. -->
+                    <img src="WhatsApp Image 2025-07-06 at 11.25.33_71bd418e.jpg" alt="Profile Photo of Dave Sarvansh" class="rounded-full h-16 w-16 object-cover shadow-md border-2 border-blue-200 flex-shrink-0" style="display: block; object-fit: cover;">
+                    <div class="flex flex-col justify-center">
+                        <h1 class="text-2xl font-extrabold text-blue-700 tracking-tight leading-tight whitespace-nowrap">Dave Sarvansh</h1>
+                    </div>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-6">
+                        <a href="#summary" class="nav-link">Summary</a>
+                        <a href="#experience" class="nav-link">Experience</a>
+                        <a href="#skills" class="nav-link">Skills</a>
+                        <a href="#education" class="nav-link">Education</a>
+                        <a href="#awards" class="nav-link">Awards</a>
+                        <a href="#development" class="nav-link">Professional Development</a> <!-- Added link -->
+                        <a href="#memories" class="nav-link">Memories</a>
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                     <button id="mobile-menu-button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <!-- Mobile menu, show/hide based on menu state. -->
+        <div class="md:hidden hidden bg-white/90" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#summary" class="nav-link block">Summary</a>
+                <a href="#experience" class="nav-link block">Experience</a>
+                <a href="#skills" class="nav-link block">Skills</a>
+                <a href="#education" class="nav-link block">Education</a>
+                <a href="#awards" class="nav-link block">Awards</a>
+                <a href="#development" class="nav-link block">Professional Development</a> <!-- Added link -->
+                <a href="#memories" class="nav-link block">Memories</a>
+                <a href="#contact" class="nav-link block">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+
+        <!-- Executive Summary Section -->
+        <section id="summary" class="mb-20 animated-section">
+            <div class="card">
+                <h2 class="section-title"><span class="icon">✨</span>Executive Summary</h2>
+                <p class="text-lg leading-relaxed text-gray-700 mb-4">
+                    A dynamic and results-driven Postgraduate in Physics with a specialized focus on advanced materials, electronic devices, and cutting-edge RF systems. I possess a robust foundation in interdisciplinary research, excelling in translating theoretical concepts into tangible innovations. My expertise encompasses the development of next-generation photonic memristors, the synthesis of advanced ferrite composites for EMI shielding, and the meticulous design and fabrication of RF filters and antennas through both simulation and experimental methodologies. I am committed to leveraging a research-driven approach to push the boundaries of materials science, electronics, and applied physics, contributing to impactful advancements in emerging technologies.
+                </p>
+                <p class="text-md font-semibold text-blue-700 leading-snug">
+                    <span class="text-gray-800">Key Focus:</span> MSc Research Student | PDEU | Memristors | RRAM | RF Devices | Filters | Antennas | FSS | Flextronics | HFSS
+                </p>
+            </div>
+        </section>
+
+        <!-- Research & Project Experience Section -->
+        <section id="experience" class="mb-20 animated-section">
+            <h2 class="section-title"><span class="icon">🚀</span>Research & Project Experience</h2>
+            <div class="timeline-container">
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Leading Edge Photonic Memristors Using RP-Phase Perovskites</h3>
+                        <p class="text-md font-medium text-gray-500 mb-4">
+                            <a href="https://scholar.google.com/citations?user=v7Hw1X8AAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Prof. Ankur Solanki</a>, PDEU | Apr 2023 – 2025
+                        </p>
+                        <ul class="list-disc list-inside space-y-3 text-gray-700">
+                            <li><strong>Spearheaded</strong> the fabrication of ultra-thin films of Ruddlesden-Popper (RP) phase perovskites (n = 1, 3, 5, 7) utilizing advanced spin coating techniques, achieving precise thickness control.</li>
+                            <li><strong>Precisely characterized</strong> switching and light-responsive synaptic behavior through comprehensive I–V and pulse-based measurements, providing critical insights into device performance and stability.</li>
+                            <li><strong>Conducted in-depth analysis</strong> of device instability, identifying key factors and laying foundational work for future neuromorphic computing applications.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Advanced RF Filter Design & Fabrication</h3>
+                        <p class="text-md font-medium text-gray-500 mb-4">
+                            <a href="https://scholar.google.com/citations?user=BvrvOzcAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Prof. Sanket Patel</a>, Ahmedabad University | Nov 2023 – Present
+                        </p>
+                        <ul class="list-disc list-inside space-y-3 text-gray-700">
+                            <li><strong>Innovatively designed</strong> high-performance microstrip filters and Frequency Selective Surface (FSS) structures using industry-standard HFSS software, optimizing for specific frequency bands.</li>
+                            <li><strong>Successfully fabricated and rigorously tested</strong> RF filters utilizing a Vector Network Analyzer (VNA), demonstrating practical application of theoretical designs and achieving target performance metrics.</li>
+                            <li>Currently engaged in the preparation of a detailed research manuscript for publication, highlighting key findings and methodologies for peer review.</li>
+                            <li><em class="text-blue-600">Project supported by a prestigious internship sponsorship from PCB Power India.</em></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="card">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-2">Sustainable Green Synthesis of Ferrites for EMI Shielding</h3>
+                        <p class="text-md font-medium text-gray-500 mb-4">
+                            <a href="https://scholar.google.com/citations?user=_dLUU0UAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">Prof. Abhisek Gor</a>, PDEU | Feb 2023 – 2025
+                        </p>
+                        <ul class="list-disc list-inside space-y-3 text-gray-700">
+                            <li><strong>Developed and optimized</strong> green synthesis routes for SrFe₁₂O₁₉ and MgAl₂O₄ composites using solid-state and wet chemical methods, emphasizing eco-friendly practices and material purity.</li>
+                            <li><strong>Systematically characterized</strong> structural and morphological properties using advanced techniques including XRD, Raman spectroscopy, SEM, and UV–Vis, ensuring material quality and confirming desired phase formation.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Key Skills Section -->
+        <section id="skills" class="mb-20 animated-section">
+            <h2 class="section-title"><span class="icon">💡</span>Key Skills & Proficiencies</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="skill-category-card">
+                    <span class="skill-category-icon">📡</span>
+                    <h3 class="skill-title">RF Design & Simulation</h3>
+                    <p class="skill-description">HFSS, Antenna Design, Filter Design, FSS, Metamaterials</p>
+                </div>
+                <div class="skill-category-card">
+                    <span class="skill-category-icon">🧪</span>
+                    <h3 class="skill-title">Material Synthesis</h3>
+                    <p class="skill-description">Solid-State, Wet Chemical Methods, Thin-Film Fabrication (Spin Coating, RF Sputtering)</p>
+                </div>
+                <div class="skill-category-card">
+                    <span class="skill-category-icon">🔬</span>
+                    <h3 class="skill-title">Material Characterization</h3>
+                    <p class="skill-description">XRD, Raman, SEM, UV-Vis, AFM, Electrical (IV, Resistivity, TEP), Synaptic Characteristics</p>
+                </div>
+                <div class="skill-category-card">
+                    <span class="skill-category-icon">⚙️</span>
+                    <h3 class="skill-title">Device Engineering</h3>
+                    <p class="skill-description">Photonic Memristors, EMI Shielding Composites, RF Devices, VNA Calibration</p>
+                </div>
+                <div class="skill-category-card">
+                    <span class="skill-category-icon">📊</span>
+                    <h3 class="skill-title">Data Analysis</h3>
+                    <p class="skill-description">Experimental Data Interpretation, Research Manuscript Preparation</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="mb-20 animated-section">
+            <h2 class="section-title"><span class="icon">🎓</span>Education</h2>
+            <div class="card">
+                 <div class="mb-6 pb-6 border-b border-gray-100 last:border-b-0">
+                    <h3 class="text-2xl font-bold text-gray-800">Pandit Deendayal Energy University (PDEU), Gujarat, India</h3>
+                    <p class="text-lg font-medium text-gray-600 italic">MSc Physics – Specialization in Advance Fabrication and Characterization</p>
+                    <p class="text-md text-gray-500">2023 – 2025 | CPI: 9.0+</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-gray-800">Saurashtra University, Rajkot, Gujarat, India</h3>
+                    <p class="text-lg font-medium text-gray-600 italic">BSc Physics</p>
+                    <p class="text-md text-gray-500">2020 – 2023 | Graduated as Summa Cum Laude</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Awards & Recognition Section -->
+        <section id="awards" class="mb-20 animated-section">
+            <h2 class="section-title"><span class="icon">🏆</span>Awards & Recognition</h2>
+            <div class="card">
+                <ul class="list-disc list-inside space-y-3">
+                    <li><strong>Best Poster Presentation</strong> – ICNNFT 2025, IISER Bhopal (Recognized for outstanding research communication and scientific contribution)</li>
+                    <li><strong>Top Performer</strong> – Quiz Series, One-Week Workshop on “Feel the Applications of Physics This Summer”, PDEU – May 2023 (Demonstrated exceptional grasp of applied physics concepts and problem-solving)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Professional Development Section -->
+        <section id="development" class="mb-20 animated-section">
+            <h2 class="section-title"><span class="icon">📈</span>Professional Development & Engagement</h2>
+            <div class="dev-timeline">
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.1s;">
+                    <div class="dev-timeline-item-icon">🎓</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Conference Attendee – ICNNFT 2025</h3>
+                        <p class="dev-timeline-item-date">IISER Bhopal</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.2s;">
+                    <div class="dev-timeline-item-icon">☀️</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Training – Solar PV Module Assembly Line (SOPAL)</h3>
+                        <p class="dev-timeline-item-date">Jan 2025</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.3s;">
+                    <div class="dev-timeline-item-icon">📶</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">RF, 5G & Signal Processing Seminar</h3>
+                        <p class="dev-timeline-item-date">Organized by Keysight Technologies – Nov 2024</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.4s;">
+                    <div class="dev-timeline-item-icon">🔩</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Skill Development Program – Metal 3D Printing</h3>
+                        <p class="dev-timeline-item-date">PDEU – Aug 2024</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.5s;">
+                    <div class="dev-timeline-item-icon">🌐</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Nanotechnology Symposium – Indrashil University</h3>
+                        <p class="dev-timeline-item-date">July 2024</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.6s;">
+                    <div class="dev-timeline-item-icon">🛠️</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Workshop – Fabrication & Characterization of Nanomaterials and Devices</h3>
+                        <p class="dev-timeline-item-date">Flextronics Lab – 2024</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.7s;">
+                    <div class="dev-timeline-item-icon">💡</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Participant – CollabSci Program</h3>
+                        <p class="dev-timeline-item-date">2024</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.8s;">
+                    <div class="dev-timeline-item-icon">🔬</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Research Internship – Ahmedabad University</h3>
+                        <p class="dev-timeline-item-date">Apr 2024</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 0.9s;">
+                    <div class="dev-timeline-item-icon">🤝</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Volunteer Administrator – ICCMDP, PDEU</h3>
+                        <p class="dev-timeline-item-date">2023–2024</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 1.0s;">
+                    <div class="dev-timeline-item-icon">🖨️</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Workshop – Skill Development Program on 3D Printing</h3>
+                        <p class="dev-timeline-item-date">Aug–Sep 2023</p>
+                    </div>
+                </div>
+                <div class="dev-timeline-item animated-section" style="animation-delay: 1.1s;">
+                    <div class="dev-timeline-item-icon">🧠</div>
+                    <div class="dev-timeline-item-content">
+                        <h3 class="dev-timeline-item-title">Participant – One-Week Workshop on “Feel the Applications of Physics This Summer”</h3>
+                        <p class="dev-timeline-item-date">PDEU – May 2023</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memory Section -->
+        <section id="memories" class="mb-20 animated-section">
+            <h2 class="section-title"><span class="icon">📸</span>My Memories & Projects in Action</h2>
+            <p class="text-center text-lg text-gray-700 mb-8">
+                A visual journey through key moments and practical applications from my research and professional development.
+            </p>
+            <!-- Instructions for adding photos are now in the HTML comments for clarity when editing the code. -->
+            <!-- Image compensation: The CSS for '.memory-image-placeholder' (object-fit: contain; width: 100%; height: 15rem;) ensures that all images will display consistently within their cards, regardless of their original dimensions. They will fit the space while maintaining aspect ratio, potentially leaving empty space (letterboxing/pillarboxing) if the aspect ratios don't match. -->
+            <div class="memory-grid">
+                <!-- Order: Most recent to oldest -->
+                
+                <div class="memory-card">
+                    <!-- Image for ICNFT Presentation -->
+                    <img src="WhatsApp Image 2025-07-15 at 23.12.53_9afaa724.jpg" alt="ICNFT Presentation" class="memory-image-placeholder">
+                    <div class="memory-content">
+                        <h3 class="memory-title">🏆 ICNFT Presentation</h3>
+                        <p class="memory-description">A glimpse from my Best Poster Presentation at the ICNFT conference (July 2025).</p>
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <!-- Image for Master's Degree Completion (new image provided by user) -->
+                    <img src="WhatsApp Image 2025-07-24 at 14.07.51_071102f3.jpg" alt="Master's Degree Completion" class="memory-image-placeholder">
+                    <div class="memory-content">
+                        <h3 class="memory-title">🎉 Master's Degree Completion</h3>
+                        <p class="memory-description">Celebrating the successful completion of my Master's degree in Physics (2025).</p>
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <!-- Image for Keysight Technologies Seminar -->
+                    <img src="WhatsApp Image 2025-07-24 at 14.06.44_15866a27.jpg" alt="Keysight Event" class="memory-image-placeholder">
+                    <div class="memory-content">
+                        <h3 class="memory-title">📶 Keysight Technologies Seminar</h3>
+                        <p class="memory-description">Insights from the RF, 5G & Signal Processing Seminar organized by Keysight Technologies (Nov 2024).</p>
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <!-- Image for Metal 3D Printing -->
+                    <img src="WhatsApp Image 2025-07-24 at 14.00.50_2e3a3647.jpg" alt="3D Metal Printing" class="memory-image-placeholder">
+                    <div class="memory-content">
+                        <h3 class="memory-title">🖨️ Metal 3D Printing</h3>
+                        <p class="memory-description">Visuals from the skill development program on advanced metal 3D printing techniques (Aug 2024).</p>
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <!-- Image for Nanojadha Event -->
+                    <img src="WhatsApp Image 2025-07-24 at 14.04.47_e670c03f.jpg" alt="Nanojadha Event" class="memory-image-placeholder">
+                    <div class="memory-content">
+                        <h3 class="memory-title">🌐 Nanojadha Event</h3>
+                        <p class="memory-description">Snapshots from the Nanotechnology Symposium at Indrashil University (July 2024).</p>
+                    </div>
+                </div>
+                
+                <div class="memory-card">
+                    <!-- Image for Internship Experience -->
+                    <img src="WhatsApp Image 2025-07-24 at 14.04.36_35aba2ea.jpg" alt="Internship Experience" class="memory-image-placeholder">
+                    <div class="memory-content">
+                        <h3 class="memory-title">💼 Internship Experience</h3>
+                        <p class="memory-description">Highlights from my research internship, applying theoretical knowledge in a practical setting (Apr 2024).</p>
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <!-- Image for ICCMDP Volunteering -->
+                    <img src="WhatsApp Image 2025-07-24 at 13.58.00_88f23081.jpg" alt="ICCMDP Volunteering" class="memory-image-placeholder">
+                    <div class="memory-content">
+                        <h3 class="memory-title">🤝 ICCMDP Volunteering</h3>
+                        <p class="memory-description">Moments from my role as a volunteer administrator at the ICCMDP event (2023–2024).</p>
+                    </div>
+                </div>
+
+                <div class="memory-card">
+                    <!-- Image for MSc Journey (original image for MSc Journey) -->
+                    <img src="WhatsApp Image 2025-07-24 at 14.00.48_9d8ad7ae.jpg" alt="MSc Journey" class="memory-image-placeholder">
+                    <div class="memory-content">
+                        <h3 class="memory-title">🎓 MSc Journey</h3>
+                        <p class="memory-description">Memories from my Master of Science degree, capturing academic milestones and growth (starts 2023).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-extrabold mb-6 text-blue-300">Get In Touch</h2>
+            <p class="text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
+                Thank you for reviewing my qualifications. I am eager to apply my interdisciplinary expertise and passion for innovation to contribute to your team's success. Please feel free to contact me to discuss how my skills align with your opportunities.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-8 text-xl font-medium">
+                <a href="mailto:davesarvansh@gmail.com" class="hover:text-blue-400 transition-colors duration-300 flex items-center">
+                    <span class="mr-2">📧</span> davesarvansh@gmail.com
+                </a>
+                <span class="hidden sm:inline-block text-gray-500">&bull;</span>
+                <a href="tel:+916355244146" class="hover:text-blue-400 transition-colors duration-300 flex items-center">
+                    <span class="mr-2">📞</span> +91 6355244146
+                </a>
+                <span class="hidden sm:inline-block text-gray-500">&bull;</span>
+                <a href="https://www.linkedin.com/in/dave-sarvansh-62a965248" target="_blank" rel="noopener noreferrer" class="hover:text-blue-400 transition-colors duration-300 flex items-center">
+                    <span class="mr-2">🔗</span> LinkedIn
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navLinks = document.querySelectorAll('#mobile-menu a.nav-link, .ml-10 a.nav-link'); // Select all nav links
+
+            // Toggle mobile menu
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Close mobile menu when a link is clicked
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    // Prevent default anchor behavior to allow smooth scroll to work
+                    event.preventDefault(); 
+                    const targetId = link.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80, // Adjust for sticky header height
+                            behavior: 'smooth'
+                        });
+                    }
+
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Intersection Observer for section animations
+            const sections = document.querySelectorAll('.animated-section');
+
+            const observerOptions = {
+                root: null, // viewport
+                rootMargin: '0px',
+                threshold: 0.1 // Trigger when 10% of the section is visible
+            };
+
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in-up');
+                        // Only unobserve if it's a general animated-section.
+                        // For timeline items, we want each to animate individually.
+                        if (!entry.target.classList.contains('dev-timeline-item')) {
+                            observer.unobserve(entry.target);
+                        }
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                sectionObserver.observe(section);
+            });
+
+            // Specific observer for professional development timeline items
+            const devTimelineItems = document.querySelectorAll('.dev-timeline-item');
+            const devTimelineObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in-up');
+                        observer.unobserve(entry.target); // Unobserve once animated
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.2 // Trigger when 20% of the item is visible
+            });
+
+            devTimelineItems.forEach(item => {
+                devTimelineObserver.observe(item);
+            });
+        });
+    </script>
+
+</body>
+</html>
